@@ -1,0 +1,117 @@
+configurando o projeto:
+
+no arquivo tsconfig.json, dentro de compilerOptions, colocar baseUrl como src, para apontar para toda a pasta src, e nao a raiz do projeto. Adicionar os paths desejados para mapear locais e facilitar/organizar os imports:
+
+    "baseUrl": "src",
+    "paths": {
+      "@app/*": [
+        "app/*"
+      ],
+      "@src/*": [
+        "*"
+      ]
+    },
+
+############################ B U I L D ############################
+no angular.json, deixar as opções fora dos ambientes, e sobrescrever apenas o que for necessário (no exemploa abaixo, sourceMaps no ambiente de prod)
+
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/angular-arch",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "aot": true,
+            "optimization": true,
+            "outputHashing": "all",
+            "sourceMap": true,
+            "extractCss": true,
+            "namedChunks": false,
+            "extractLicenses": true,
+            "vendorChunk": false,
+            "buildOptimizer": true,
+            "budgets": [
+              {
+                "type": "initial",
+                "maximumWarning": "500kb",
+                "maximumError": "1mb"
+              },
+              {
+                "type": "anyComponentStyle",
+                "maximumWarning": "2kb",
+                "maximumError": "4kb"
+              }
+            ],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "prod": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "sourceMap": false
+            },
+            "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+		
+		
+############################ S E R V E ############################
+mudar, por exemplo, a porta em que a aplicação roda, se necessário:
+
+        "serve": {
+          "options": {
+            "browserTarget": "angular-arch:build",
+            "port": 5200
+          },
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "prod": {
+              "browserTarget": "angular-arch:build:prod"
+            },
+            "dev": {
+              "browserTarget": "angular-arch:build:dev"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+######################### O P T I M I Z E #########################
+abrir angular.json e mover as opcoes
+              "optimization": true,
+              "buildOptimizer": true
+
+para as configurations de build de prod, e setar na geral como false
+
+
+####################### C O M P O N E N T S #######################
+
+sempre criar componentes isolados por modulos
+
+criar pasta do componente
+dentro dela, criar modulo e componentes usando cli
+ng g module pasta/componente --routing
+ng g c pasta/componente
+
+se der esse erro: No provider for ChildrenOutletContexts
+
